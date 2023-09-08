@@ -13,8 +13,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.springframework.scheduling.config.Task;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -38,7 +36,7 @@ public class User {
 
     @Column(name = "username", length = 100, nullable = false, unique = true)
     @Size(min = 2, max = 100)
-    @org.hibernate.validator.constraints.NotBlank
+    @NotBlank
     private String username;
 
     @Column(name = "password", length = 60, nullable = false)
