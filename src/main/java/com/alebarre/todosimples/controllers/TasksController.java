@@ -1,4 +1,4 @@
-package com.alebarre.todosimples;
+package com.alebarre.todosimples.controllers;
 
 import java.net.URI;
 import java.util.List;
@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.alebarre.todosimples.models.Tasks;
 import com.alebarre.todosimples.services.TasksService;
+import com.alebarre.todosimples.services.UserService;
 
 @RestController
 @RequestMapping("/tasks")
@@ -29,14 +30,18 @@ public class TasksController {
 	@Autowired
 	private TasksService tasksService;
 	
+	@Autowired
+	private UserService userService;
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Tasks> findById(@PathVariable Long id){
 		Tasks obj = this.tasksService.findById(id);
 		return ResponseEntity.ok(obj);
 	}
 	
-	@GetMapping("/user-task/{userId}")
+	@GetMapping("/user-tasks/{userId}")
 	public ResponseEntity<List<Tasks>> findAllTasksByUserId(@PathVariable Long userId){
+		userService.findById(userId);
 		List<Tasks> objs = this.tasksService.findAllTasksByUserId(userId);
 		return ResponseEntity.ok().body(objs);
 	}

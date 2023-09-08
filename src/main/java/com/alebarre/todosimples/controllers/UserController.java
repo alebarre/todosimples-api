@@ -58,7 +58,7 @@ public class UserController {
 	@Validated(UpdateUser.class)
 	public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id ){
 		obj.setId(id);
-		obj = this.userService.update(obj);
+		this.userService.update(obj);
 		return ResponseEntity.noContent().build();
 	}
 	
