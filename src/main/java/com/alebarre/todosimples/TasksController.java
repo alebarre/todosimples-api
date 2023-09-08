@@ -1,4 +1,4 @@
-package com.alebarre.todosimples.controllers;
+package com.alebarre.todosimples;
 
 import java.net.URI;
 import java.util.List;
@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,52 +18,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.alebarre.todosimples.models.User;
-import com.alebarre.todosimples.models.User.CreateUser;
-import com.alebarre.todosimples.models.User.UpdateUser;
-import com.alebarre.todosimples.services.UserService;
+import com.alebarre.todosimples.models.Tasks;
+import com.alebarre.todosimples.services.TasksService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/tasks")
 @Validated
-public class UserController {
+public class TasksController {
 
 	@Autowired
-	private UserService userService;
-	
-	@GetMapping("/all")
-    public List<User> findAll() {
-        return userService.findAll();
-    }
+	private TasksService tasksService;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<User> findById(@PathVariable Long id) {
-		User obj = this.userService.findById(id);
-		return ResponseEntity.ok().body(obj);
+	public ResponseEntity<Tasks> findById(@PathVariable Long id){
+		Tasks obj = this.tasksService.findById(id);
+		return ResponseEntity.ok(obj);
+	}
+	
+	@GetMapping("/user-task/{userId}")
+	public ResponseEntity<List<Tasks>> findAllTasksByUserId(@PathVariable Long userId){
+		List<Tasks> objs = this.tasksService.findAllTasksByUserId(userId);
+		return ResponseEntity.ok().body(objs);
 	}
 	
 	@PostMapping
-	@Validated(CreateUser.class)
-	public ResponseEntity<Void> create(@Valid @RequestBody User obj){
-		this.userService.create(obj);
+	public ResponseEntity<Void> create (@Valid @RequestBody Tasks obj){
+		this.tasksService.create(obj);
 		URI uri = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("/{id}")
-				.buildAndExpand(obj.getId()).toUri();
+		.fromCurrentRequest()
+		.path("/{id}")
+		.buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")
-	@Validated(UpdateUser.class)
-	public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id ){
+	@Validated
+	public ResponseEntity<Void> update(@Valid @RequestBody Tasks obj, @PathVariable Long id){
 		obj.setId(id);
-		obj = this.userService.update(obj);
+		this.tasksService.update(obj);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id){
-		this.userService.delete(id);
+		this.tasksService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
