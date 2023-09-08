@@ -1,15 +1,13 @@
 package com.alebarre.todosimples.services;
 
+import java.util.List;
 import java.util.Optional;
-
-import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alebarre.todosimples.models.User;
-import com.alebarre.todosimples.repositories.TasksRepository;
 import com.alebarre.todosimples.repositories.UserRepository;
 
 @Service
@@ -17,6 +15,11 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	public List<User> findAll() {
+		List<User> user =  this.userRepository.findAll();
+		return user;
+	}
 	
 	public User findById(Long id) {
 		Optional<User> user =  this.userRepository.findById(id);
